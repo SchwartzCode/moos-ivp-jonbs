@@ -1,0 +1,21 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+ProcessConfig = pXRelayTest
+{
+   AppTick   = 4
+   CommsTick = 4
+ 
+   OUTGOING_VAR = APPLES
+   INCOMING_VAR = PEARS
+}
+
+ProcessConfig = ANTLER
+{
+  MSBeteenLaunches = 100
+
+  Run = MOOSDB    @ NewConsole = false
+  Run = pXRelay   @ NewConsole = false
+}

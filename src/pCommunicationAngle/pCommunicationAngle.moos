@@ -1,0 +1,17 @@
+//------------------------------------------------
+// pCommunicationAngle config block
+
+server = oceanai.mit.edu
+port = 9011
+
+ProcessConfig = pCommunicationAngle
+{
+   AppTick   = 10
+   CommsTick = 10
+}
+
+ProcessConfig = pAntler
+{
+  Run = MOOSDB      @ NewConsole = false
+  Run = pCommunicationAngle @ NewConsole = false
+}

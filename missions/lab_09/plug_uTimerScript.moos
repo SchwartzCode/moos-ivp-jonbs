@@ -1,0 +1,13 @@
+ //------------------------------------------
+ ProcessConfig = uTimerScript                                    
+ {                                                               
+   paused = true
+   pause_var = UTS_PAUSE   
+
+   rand_var    = varname=RND_X, min=-25, max=200, key=at_post
+   rand_var    = varname=RND_Y, min=-175, max=-25, key=at_post
+  
+   EVENT = var=VISIT_POINT, val="firstpoint", time=15
+   EVENT = var=VISIT_POINT, val="x=$(RND_X),y=$(RND_Y),id=$(TCOUNT)",time=16:20, amt=100 
+   EVENT = var=VISIT_POINT, val="lastpoint", time=21
+ }                                                 

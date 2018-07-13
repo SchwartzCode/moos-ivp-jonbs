@@ -1,0 +1,16 @@
+//------------------------------------------------
+// pPrimeFactor config block
+
+ProcessConfig = pPrimeFactor
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200;
+  
+  Run = MOOSDB    @ NewConsole = false
+  Run = pPrimeFactor @ NewConsole = false
+}

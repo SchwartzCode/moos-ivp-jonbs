@@ -1,0 +1,175 @@
+//--------    FILE: bravo.bhv   -------------
+
+initialize   DEPLOY = false
+initialize   RETURN = false
+	
+//----------------------------------------------
+Behavior=BHV_Loiter
+{
+  name      = loiter_west
+  pwt       = 100
+  condition = MODE=LOITERING
+  condition = LOITER_REGION=west
+  updates   = LOITER_UPDATES_WEST
+  condition = RETURN = false
+  condition = DEPLOY = true
+  condition = UNDER_WATER = true
+  perpetual = true
+  duration = 150
+  duration_idle_decay=false
+  endflag  = LOITER_REGION=east
+
+  clockwise     = false
+  speed = 2.5
+  polygon = radial::x=100,y=-75,radius=30,pts=8,snap=1,label=Loiter_Polygon_E
+  
+
+    visual_hints = nextpt_color=green
+    visual_hints = nextpt_vertex_size=8
+    visual_hints = nextpt_lcolor=gray70
+    visual_hints = vertex_color=dodger_blue, edge_color=white
+    visual_hints = vertex_size=5, edge_size=1
+}
+
+//---------------------------------------------
+ Behavior = BHV_ConstantDepth //hey how's it going
+ {
+   name         = const_dep_west
+   pwt          = 100                // default
+   condition    = LOITER_REGION=west
+   updates      = CONST_DEP_UPDATES
+
+            basewidth = 100          // default
+                depth = 30           // default
+   depth_mismatch_var = DEPTH_DIFF   // example
+             duration = no-time-limit           // default
+            peakwidth = 3            // default
+          summitdelta = 50           // default
+ }
+
+
+
+//----------------------------------------------
+Behavior=BHV_Loiter
+{
+  name      = loiter_east
+  pwt       = 100
+  condition = MODE=LOITERING
+  condition = LOITER_REGION=east
+  updates   = LOITER_UPDATES_EAST
+  condition = RETURN = false
+  condition = DEPLOY = true
+  condition = UNDER_WATER = true
+  perpetual = true
+  endflag   = LOITER_REGION=west
+  duration = 150
+  duration_idle_decay = false
+
+  clockwise     = false
+  speed         = 2.5 //meters per second
+  polygon = radial::x=160,y=-75,radius=20,pts=8,snap=1,label=Loiter_Polygon_W
+  
+
+    visual_hints = nextpt_color=green
+    visual_hints = nextpt_vertex_size=8
+    visual_hints = nextpt_lcolor=gray70
+    visual_hints = vertex_color=dodger_blue, edge_color=white
+    visual_hints = vertex_size=5, edge_size=1
+}
+
+
+//---------------------------------------------
+ Behavior = BHV_ConstantDepth //hey how's it going
+ {
+   name         = const_dep_east
+   pwt          = 100                // default
+   condition    = LOITER_REGION=east
+   updates      = CONST_DEP_UPDATES
+
+            basewidth = 100          // default
+                depth = 10            // default
+   depth_mismatch_var = DEPTH_DIFF   // example
+             duration = no-time-limit            // default
+            peakwidth = 3            // default
+          summitdelta = 50           // default
+ }
+
+//---------------------------------
+//PART THAT RISES FOR AIR
+Behavior = BHV_Timer
+{
+  name        = rise_timer
+  condition   = UNDER_WATER = true
+  duration    = 200
+  condition   = DEPLOY = true
+  endflag     = UNDER_WATER = false
+  endflag     = FRESH_AIR = true
+}
+
+//---------------------------------
+Behavior = BHV_ConstantDepth
+{
+  name        = surfacing
+  pwt         = 100
+  condition   = UNDER_WATER = false
+  condition   = FRESH_AIR   = true
+  condition   = DEPLOY      = true
+  duration    = 60
+
+  
+  
+            basewidth = 100          // default
+                depth = 0           // default
+   depth_mismatch_var = DEPTH_DIFF   // example
+            peakwidth = 3            // default
+          summitdelta = 50           // default
+}
+
+//--------------------------------
+Behavior = BHV_Timer
+{
+  name      = surface_timer
+  pwt       = 100
+  condition = UNDER_WATER = false
+  condition = FRESH_AIR   = true
+  condition = DEPLOY      = true
+  endflag   = UNDER_WATER = true
+}
+
+//----------------------------------------------
+Behavior=BHV_Waypoint
+{
+  name       = waypt_return
+  pwt        = 100
+  condition  = RETURN = true
+  condition  = DEPLOY = true
+  perpetual  = true
+  updates    = RETURN_UPDATE
+  endflag    = RETURN = false
+  endflag    = DEPLOY = false
+  endflag    = MISSION = complete
+	
+           speed = 2.5
+  capture_radius = 2.0
+     slip_radius = 8.0
+          points = 0,0
+ }
+
+
+//----------------------------------------------
+Behavior=BHV_ConstantSpeed
+{
+  name       = const_speed
+  pwt        = 200
+  condition  = SPD=true
+  condition  = DEPLOY = true
+  perpetual  = true
+  updates    = SPEED_UPDATE
+  endflag    = SPD = false
+
+     speed = 2.5
+		 duration = 10
+		 duration_reset = CONST_SPD_RESET=true
+	
+}
+

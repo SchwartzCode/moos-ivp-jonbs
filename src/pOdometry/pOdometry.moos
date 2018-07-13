@@ -1,0 +1,9 @@
+//------------------------------------------------
+// pOdometry config block
+
+ProcessConfig = pOdometry
+{
+   AppTick   = 10
+   CommsTick = 10
+}
+
