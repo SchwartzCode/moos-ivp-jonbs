@@ -37,6 +37,8 @@ protected: // Configuration parameters
   double m_osy;
   int m_wpt_index;
   double m_curr_time;
+  double m_pulse_time;
+  bool m_pulse_ready;
 
 protected: // State variables
 };

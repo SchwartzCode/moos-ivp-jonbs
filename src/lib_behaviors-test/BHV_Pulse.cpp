@@ -37,6 +37,9 @@ BHV_Pulse::BHV_Pulse(IvPDomain domain) :
   m_osy = 0;
   m_curr_time = 0;
   m_wpt_index = 0;
+  m_pulse_time = 10;
+
+  m_pulse_ready = false;
 }
 
 //---------------------------------------------------------------
@@ -136,14 +139,17 @@ void BHV_Pulse::pulseIt()
   pulse.set_y(m_osy);
   pulse.set_label("bhv_pulse");
   pulse.set_rad(m_p_range);
-  pulse.set_duration(m_duration);
-  pulse.set_time(m_curr_time + 5);
+  pulse.set_duration(m_p_duration);
+  pulse.set_time(m_pulse_time);
   pulse.set_color("edge", "yellow");
   pulse.set_color("fill", "yellow");
 
   string spec = pulse.get_spec();
+  
+  postMessage("PULSE_ATTEMPT", spec);
   postMessage("VIEW_RANGE_PULSE", spec);
-  IvPFunction *ipf = 0;
+
+  m_pulse_ready = false;
 }
 
 
@@ -154,38 +160,40 @@ void BHV_Pulse::pulseIt()
 IvPFunction* BHV_Pulse::onRunState()
 {
   // Part 1: Build the IvP function
-  bool recieved = false;
+  IvPFunction *ipf = 0;
+
+  bool recieved = true;
   m_osx = getBufferDoubleVal("NAV_X", recieved);
   if (!recieved)
     postWMessage("WARNING: NAV_X variable is missing");
-
-  recieved = false;
-  
+ 
   m_osy = getBufferDoubleVal("NAV_Y", recieved);
   if (!recieved)
     postWMessage("WARNING: NAV_Y variable missing!");
 
-  recieved = false;
-
   m_curr_time = getBufferCurrTime();
 
   double new_wpt_index =  getBufferDoubleVal("WPT_INDEX", recieved);
-  //postWMessage("WPT_IND: " + to_string(new_wpt_index));
-/*
-  if (!recieved)
-    postWMessage("WARNING: WPT_INDEX variable missing!");
+
+  //no idea why moos thinks I'm not recieving the WPT_INDEX
+ // if (!recieved)
+ //   postWMessage("WARNING: WPT_INDEX variable missing!");
 
   if (new_wpt_index != m_wpt_index)
+  {
+    m_pulse_time = m_curr_time + 5;
+    m_pulse_ready = true;
+    m_wpt_index = new_wpt_index;
+  }
+
+
+  if (m_pulse_ready &&  m_curr_time > m_pulse_time)
     pulseIt();
 
-  m_wpt_index = new_wpt_index;
-
-*/
   // Part N: Prior to returning the IvP function, apply the priority wt
   // Actual weight applied may be some value different than the configured
   // m_priority_wt, depending on the behavior author's insite.
 
-  IvPFunction *ipf = 0;
 
   if(ipf)
     ipf->setPWT(m_priority_wt);
