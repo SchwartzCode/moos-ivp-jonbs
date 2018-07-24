@@ -1,0 +1,26 @@
+4.3.1) The cooling factor has a positive correlation with the likelihood of
+  good results (low error/good score) because higher cooling factors will
+result in most of the distribution being concentrated at lower temperatures.
+This results in less heating needed to be done in the annealing method to heat
+the water to a random liquid-state arrangement, and therefore a quicker and
+more accurate computational method.
+
+
+Making the bounds for the alpha estimate wider will result in more variance in
+results, as it allows for a greater range of estimates.
+
+4.3.2) ((make it))
+
+4.3.3) The accuracy of the two variables its estimating (wavelength and period)
+ seem to be tied together; the estimates for each variable tend to be roughly
+as close as the other estimate. The period estimates tend to be more accurate,
+as the range allowed for period estimates is [100,300], whereas the range
+allowed for wavelength estimates is [100,500]. A larger window for estimates
+means more potential values for estimates, and therefore an increase in the
+variance of the estimates.
+
+4.3.4) The estimates tend to be more accurate when the angle is set to 270, but
+  the estimates are more independent when the angle is set to 225.
+
+  Smaller lane widths lead to longer search times and less accurate results
+(likely due to lots of measurements from the same general area).

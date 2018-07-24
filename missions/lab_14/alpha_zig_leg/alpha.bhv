@@ -7,7 +7,7 @@ initialize   RETURN = false
 Behavior = BHV_Waypoint
 { 
   name      = waypt_survey
-  pwt       = 100
+  pwt       = 80
   condition = RETURN = false
   condition = DEPLOY = true
   endflag   = RETURN = true
@@ -72,11 +72,11 @@ Behavior=BHV_ConstantSpeed
 	
 }
 
-Behavior=BHV_Pulse
+Behavior=BHV_ZigLeg
 {
-    name       = pulse
+    name       = zagtastic
     pwt        = 100
 
-    pulse_range = 10
-    pulse_duration = 10
+    zig_angle = 60
+    zig_duration = 10
 }

@@ -62,3 +62,37 @@ TARGET_LINK_LIBRARIES(BHV_Pulse
    mbutil 
    geometry 
    ${SYSTEM_LIBS} )
+
+
+#--------------------------------------------------------
+#                                      BHV_ZigLeg
+#--------------------------------------------------------
+ADD_LIBRARY(BHV_ZigLeg SHARED 
+  BHV_ZigLeg.cpp)
+TARGET_LINK_LIBRARIES(BHV_ZigLeg
+   helmivp
+   behaviors 
+   ivpbuild 
+   logic 
+   ivpcore 
+   bhvutil 
+   mbutil 
+   geometry 
+   ${SYSTEM_LIBS} )
+
+
+#--------------------------------------------------------
+#                                      BHV_TempGradient
+#--------------------------------------------------------
+ADD_LIBRARY(BHV_TempGradient SHARED 
+  BHV_TempGradient.cpp)
+TARGET_LINK_LIBRARIES(BHV_TempGradient
+   helmivp
+   behaviors 
+   ivpbuild 
+   logic 
+   ivpcore 
+   bhvutil 
+   mbutil 
+   geometry 
+   ${SYSTEM_LIBS} )
