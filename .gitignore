@@ -9,3 +9,5 @@ cmake-build-debug/
 targ_*
 .moos++
 .swp
+.swo
+*~
