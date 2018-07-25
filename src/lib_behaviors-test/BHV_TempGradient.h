@@ -34,6 +34,7 @@ protected: // Configuration parameters
   double m_osy;
   double m_temp_low;
   double m_temp_high;
+  double m_diff;
 
   double m_rep_x;
   double m_rep_y;

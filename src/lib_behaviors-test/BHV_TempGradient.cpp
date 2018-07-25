@@ -24,8 +24,9 @@ BHV_TempGradient::BHV_TempGradient(IvPDomain domain) :
 
   // Declare the behavior decision space
   m_domain = subDomain(m_domain, "course,speed");
-  m_temp_low = 100;
-  m_temp_high = -10000;
+  m_temp_low = 110; //water wont be above boiling temp
+  m_temp_high = -10; //water wont be below freezing temp
+  m_diff = 0;
 
 
   // Add any variables this behavior needs to subscribe for
@@ -49,6 +50,11 @@ bool BHV_TempGradient::setParam(string param, string val)
   }
   else if (param == "bar") {
     // return(setBooleanOnString(m_my_bool, val));
+  }
+  else if (param == "polygon"){
+    postMessage("POINTS", val);
+
+    return(true);
   }
 
   // If not handled above, then just return false;
@@ -131,15 +137,19 @@ void BHV_TempGradient::handleMailReport(string input)
       m_rep_temp = stod(vals[i]);
   
     postMessage("TEMP", m_rep_temp);
+    
     if (m_rep_temp > m_temp_high)
     {
       m_temp_high = m_rep_temp;
       postMessage("NEW_HIGH_TEMP", to_string(m_temp_high));
     }
-    else if (m_rep_temp < m_temp_low)
+    
+    //have m_rep_temp as a condition because it is initially passed in as
+    //0 which supercedes all other low temperatures (at least some of the time)
+    if (m_rep_temp < m_temp_low && m_rep_temp)
     {
-      postMessage("NEW_LOW_TEMP", to_string(m_temp_low));
       m_temp_low = m_rep_temp;
+      postMessage("NEW_LOW_TEMP", to_string(m_temp_low));
     }
   }
 }

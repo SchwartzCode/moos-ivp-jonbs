@@ -18,6 +18,8 @@ LANE_WIDTH1=40
 LANE_WIDTH2=40
 DEGREES1=270
 DEGREES2=0
+OP_REGION="pts={-50,-40:100,20:180,20:180,-200:-50,-200:-100,-75}"
+
 for ARGI; do
     #help:
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then 
@@ -98,7 +100,7 @@ nsplug meta_vehicle.moos targ_$VNAME1.moos -f WARP=$TIME_WARP  \
 nsplug meta_vehicle.bhv targ_$VNAME1.bhv -f VNAME=$VNAME1      \
     START_POS=$START_POS1 SURVEY_X=$SURVEY_X SURVEY_Y=$SURVEY_Y \
         HEIGHT=$HEIGHT1   WIDTH=$WIDTH1 LANE_WIDTH=$LANE_WIDTH1 \
-        DEGREES=$DEGREES1
+        DEGREES=$DEGREES1 OP_REGION=$OP_REGION
 
 #start second vehicle:                                                                                                   
 nsplug meta_vehicle.moos targ_$VNAME2.moos -f WARP=$TIME_WARP  \
@@ -110,7 +112,7 @@ nsplug meta_vehicle.moos targ_$VNAME2.moos -f WARP=$TIME_WARP  \
 nsplug meta_vehicle.bhv targ_$VNAME2.bhv -f VNAME=$VNAME2      \
     START_POS=$START_POS2 SURVEY_X=$SURVEY_X SURVEY_Y=$SURVEY_Y \
         HEIGHT=$HEIGHT2   WIDTH=$WIDTH2 LANE_WIDTH=$LANE_WIDTH2 \
-        DEGREES=$DEGREES2
+        DEGREES=$DEGREES2 OP_REGION=$OP_REGION
 
 
 if [ ${JUST_MAKE} = "yes" ] ; then
