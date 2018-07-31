@@ -53,7 +53,8 @@ bool BHV_TempGradient::setParam(string param, string val)
   }
   else if (param == "polygon"){
     postMessage("POINTS", val);
-
+    handleSearchPolygon(val);
+    
     return(true);
   }
 
@@ -119,9 +120,42 @@ void BHV_TempGradient::onRunToIdleState()
 {
 }
 
+void BHV_TempGradient::handleSearchPolygon(string input)
+{
+    biteString(input, '{');
+    string points = biteString(input, '}');
+    postMessage("B", points);
+
+    vector<string> split_points= parseString(points, ':');
+    string updates_str = "points = ";
+
+    postMessage("A", split_points[1]);
+/*
+    for (int i=0; i<split_points.size(); i++)
+    {  
+      string x = to_string([i]);
+      string y = to_string(m_points[1][i]);
+
+      updates_str += x + "," + y;
+      if (i<49)
+        updates_str += ":";
+    }
+
+  Notify("WAYPOINT_UPDATES", updates_str);
+*/
+    //vector<string> parsed_input = parsestring(points, ',');
+    
+    /*
+    search_region.push_back(x-min);
+    search_region.push_back(x-max);
+    search_region.push_back(y-min);
+    search_region.push_back(y-max);
+    */
+
+}
+
 void BHV_TempGradient::handleMailReport(string input)
 {
-  postMessage("A", input);
 
   vector<string> vals = parseString(input, ',');
 
@@ -152,6 +186,8 @@ void BHV_TempGradient::handleMailReport(string input)
       postMessage("NEW_LOW_TEMP", to_string(m_temp_low));
     }
   }
+
+  m_diff = m_temp_high - m_temp_low;
 }
 
 //---------------------------------------------------------------

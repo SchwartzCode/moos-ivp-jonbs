@@ -147,13 +147,10 @@ void GenPath::organizePoints()
 
 bool GenPath::postPoints()
 {
-//  vector<string> input(m_input.begin()+1, m_points.end()-1);
   string updates_str = "points = ";
 
   for (int i=0; i<50; i++)
   {  
-  //  Notify("werkin", input[i]);
-
     string x = to_string(m_points[0][i]);
     string y = to_string(m_points[1][i]);
 

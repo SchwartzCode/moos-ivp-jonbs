@@ -26,6 +26,7 @@ public:
   void         onIdleToRunState();
   void         handleMailReport(std::string);
   IvPFunction* onRunState();
+  void         handleSearchPolygon(std::string);
 
 protected: // Local Utility functions
 
@@ -39,6 +40,10 @@ protected: // Configuration parameters
   double m_rep_x;
   double m_rep_y;
   double m_rep_temp;
+
+
+  
+  vector<double> search_region; // region that front occurs in, with a little space left for the edges
 
 protected: // State variables
 };
