@@ -82,10 +82,10 @@ fi
 #-------------------------------------------------------
 
 VNAME1="archie"      # The first  vehicle community
-START_POS1="0,0"  
+START_POS1="-25,0"  
 
 VNAME2="betty"
-START_POS2="0,0"
+START_POS2="15,0"
 
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP \
    VNAME="shoreside" SHARE_LISTEN=$SHORE_LISTEN
@@ -98,7 +98,7 @@ nsplug meta_vehicle.moos targ_$VNAME1.moos -f WARP=$TIME_WARP  \
    CONCURRENT=$CONCURRENT  ADAPTIVE=$ADAPTIVE
 
 nsplug meta_vehicle.bhv targ_$VNAME1.bhv -f VNAME=$VNAME1      \
-    START_POS=$START_POS1 SURVEY_X=$SURVEY_X SURVEY_Y=$SURVEY_Y \
+    START_POS=$START_POS2 SURVEY_X=$SURVEY_X SURVEY_Y=$SURVEY_Y \
         HEIGHT=$HEIGHT1   WIDTH=$WIDTH1 LANE_WIDTH=$LANE_WIDTH1 \
         DEGREES=$DEGREES1 OP_REGION=$OP_REGION
 

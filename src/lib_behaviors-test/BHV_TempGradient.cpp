@@ -27,10 +27,12 @@ BHV_TempGradient::BHV_TempGradient(IvPDomain domain) :
   m_temp_low = 110; //water wont be above boiling temp
   m_temp_high = -10; //water wont be below freezing temp
   m_diff = 0;
+  m_init_waypoints = 0;
+  m_curr_wpt_index=0;
 
 
   // Add any variables this behavior needs to subscribe for
-  addInfoVars("NAV_X, NAV_Y, NAV_HEADING, UCTD_MSMNT_REPORT");
+  addInfoVars("NAV_X, NAV_Y, NAV_HEADING, UCTD_MSMNT_REPORT, WPT_INDEX");
 }
 
 //---------------------------------------------------------------
@@ -124,33 +126,41 @@ void BHV_TempGradient::handleSearchPolygon(string input)
 {
     biteString(input, '{');
     string points = biteString(input, '}');
-    postMessage("B", points);
 
     vector<string> split_points= parseString(points, ':');
     string updates_str = "points = ";
-
-    postMessage("A", split_points[1]);
-/*
+    m_init_waypoints = split_points.size()-1;
+    
+  
     for (int i=0; i<split_points.size(); i++)
     {  
-      string x = to_string([i]);
-      string y = to_string(m_points[1][i]);
+      string x = biteString(split_points[i], ',');
+      string y = split_points[i];
+
+      double x_dub = stod(x);
+      double y_dub = stod(y);
+
+      //could make this more robust (for other search regions) by making the
+      //app import a center point or calculate one from the given region
+      if (x_dub > 150)
+        x=to_string(x_dub-20);
+      else if (x_dub < 0)
+        x=to_string(x_dub+20);
+
+      if (y_dub > 0)
+        y=to_string(y_dub-20);
+      else if (y_dub < -150)
+        y=to_string(y_dub+20);
+
 
       updates_str += x + "," + y;
-      if (i<49)
+      if (i<split_points.size())
         updates_str += ":";
     }
-
-  Notify("WAYPOINT_UPDATES", updates_str);
-*/
-    //vector<string> parsed_input = parsestring(points, ',');
+    updates_str += "75,-100";
     
-    /*
-    search_region.push_back(x-min);
-    search_region.push_back(x-max);
-    search_region.push_back(y-min);
-    search_region.push_back(y-max);
-    */
+    postMessage("WAYPOINT_UPDATES", updates_str);
+
 
 }
 
@@ -180,14 +190,22 @@ void BHV_TempGradient::handleMailReport(string input)
     
     //have m_rep_temp as a condition because it is initially passed in as
     //0 which supercedes all other low temperatures (at least some of the time)
-    if (m_rep_temp < m_temp_low && m_rep_temp)
+    if (m_rep_temp < m_temp_low && m_rep_temp>0.01)
     {
       m_temp_low = m_rep_temp;
       postMessage("NEW_LOW_TEMP", to_string(m_temp_low));
     }
   }
 
+  tempPoint new_point = tempPoint(m_rep_x, m_rep_y, m_rep_temp);
+  postMessage("BB", new_point.get_temp());
+  temp_info.push_back(new_point);
+
   m_diff = m_temp_high - m_temp_low;
+  postMessage("A", m_diff);
+
+  //this isn't working for some reason (guessing problem with object functions)
+  postMessage("B", temp_info.size());
 }
 
 //---------------------------------------------------------------
@@ -212,11 +230,17 @@ IvPFunction* BHV_TempGradient::onRunState()
   if (recieved)
     handleMailReport(report);
 
+  m_curr_wpt_index = getBufferDoubleVal("WPT_INDEX", recieved);
+  if (recieved)
+  postMessage("WPT_HIT", m_curr_wpt_index);
+
+  if (m_curr_wpt_index >= m_init_waypoints && m_curr_wpt_index > 0)
+    postMessage("LEGGO", "a");
 
 
   // Part N: Prior to returning the IvP function, apply the priority wt
   // Actual weight applied may be some value different than the configured
-  // m_priority_wt, depending on the behavior author's insite.
+  // m_priority_wt, depending on the behavior author's insight.
   if(ipf)
     ipf->setPWT(m_priority_wt);
 
